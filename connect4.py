@@ -87,7 +87,6 @@ def max_dfs(board, player, maxDepth, currentDepth):
     v = -1000
     move = 0
     for m in legal_moves():
-        tempBoard = make_move(m, player)
         new_value = min_dfs(make_move_local(list(board),m,player), opponent(player), maxDepth, currentDepth + 1)[0]
         if new_value > v:
             v = new_value
@@ -107,7 +106,6 @@ def min_dfs(board, player, maxDepth, currentDepth):
     v = 1000
     move = 0
     for m in legal_moves():
-        tempBoard = make_move(m, player)
         new_value = max_dfs(make_move_local(list(board),m,player), opponent(player), maxDepth, currentDepth + 1)[0]
         if new_value < v:
             v = new_value
