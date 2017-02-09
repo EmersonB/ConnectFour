@@ -29,7 +29,7 @@ def is_legal(move):
 
 
 def legal_moves():
-    return [moves for moves in board if is_legal(move)]
+    return [moves for moves in range(0,7) if is_legal(moves)]
 
 
 def make_move(move, player):
@@ -43,6 +43,16 @@ def make_move(move, player):
 
     board[column] = player
     return column
+
+def make_move_local(my_board, move, player):
+    column = move
+    while (my_board[column + 7] == "."):
+        column += 7
+        if column >= 35:
+            break
+
+    my_board[column] = player
+    return my_board
 
 
 def opponent(player):
@@ -65,6 +75,8 @@ def minimax(player, maxDepth, currentDepth):
         return min_dfs(board, player, maxDepth, currentDepth)[1]
 
 def max_dfs(board, player, maxDepth, currentDepth):
+    if (currentDepth >= maxDepth):
+        return 0, None
     if(game_over(board)!= -1):
         if(game_over(board)=="x"):
             return 1000, None
@@ -76,13 +88,15 @@ def max_dfs(board, player, maxDepth, currentDepth):
     move = 0
     for m in legal_moves():
         tempBoard = make_move(m, player)
-        new_value = min_dfs(make_move( m, player), opponent(player), maxDepth, currentDepth + 1)[0]
+        new_value = min_dfs(make_move_local(list(board),m,player), opponent(player), maxDepth, currentDepth + 1)[0]
         if new_value > v:
             v = new_value
             move = m
     return v, move
 
 def min_dfs(board, player, maxDepth, currentDepth):
+    if(currentDepth >= maxDepth):
+        return 0, None
     if(game_over(board)!= -1):
         if(game_over(board)=="x"):
             return 1000, None
@@ -94,7 +108,7 @@ def min_dfs(board, player, maxDepth, currentDepth):
     move = 0
     for m in legal_moves():
         tempBoard = make_move(m, player)
-        new_value = max_dfs(make_move(m, player), opponent(player), maxDepth, currentDepth + 1)[0]
+        new_value = max_dfs(make_move_local(list(board),m,player), opponent(player), maxDepth, currentDepth + 1)[0]
         if new_value < v:
             v = new_value
             move = m
