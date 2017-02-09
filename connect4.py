@@ -2,12 +2,13 @@ board = ["."] * 42
 player = 'x'
 
 
-def terminal_state(move):
+def terminal_state(start_move):
     dirs = [1, -1, -7, 7, -8, 8, 6, -6]
     for dir in dirs:
+        move = start_move
         current = board[move]
         count = 0
-        while move <= 42 and move >= 0 and board[move] is current:
+        while move < 42 and move >= 0 and board[move] is current:
             count += 1
             move += dir
             if count is 4:
@@ -46,7 +47,7 @@ def make_move(move, player):
 def opponent(player):
     if player == 'x':
         return 'o'
-    return 'x '
+    return 'x'
 
 
 def display():
@@ -62,8 +63,8 @@ move = int(input("move:"))
 move = make_move(move, player)
 display()
 while terminal_state(move) is None:
+    print(move)
     player = opponent(player)
     move = int(input("move:"))
-    while make_move(move, player) == False:
-        move = int(input("Invalid Move, New Move:"))
+    move = make_move(move,player)
     display()
