@@ -1,6 +1,23 @@
 board = ["."] * 42
 player = 'x'
 
+SQUARE_WEIGHTS = [1, 2, 3, 3, 2, 1,
+                  1, 2, 3, 3, 2, 1,
+                  1, 2, 3, 3, 2, 1,
+                  1, 2, 3, 3, 2, 1,
+                  1, 2, 3, 3, 2, 1,
+                  1, 2, 3, 3, 2, 1,
+                  1, 2, 3, 3, 2, 1]
+
+def score(my_board):
+    total = 0
+    for i in range(len(my_board)):
+        if my_board[i] == "x":
+            total += SQUARE_WEIGHTS[i]
+        elif my_board[i] == "o":
+            total -= SQUARE_WEIGHTS[i]
+    return total
+
 def game_over(board):
     for move in range(0,42):
         if board[move] is not ".":
@@ -14,7 +31,7 @@ def terminal_state(start_move):
         move = start_move
         current = board[move]
         count = 0
-        while move < 42 and move >= 0 and board[move] is current:
+        while move < 42 and move >= 0 and board[move] is current and board[move] is not ".":
             count += 1
             move += dir
             if count is 4:
@@ -76,8 +93,8 @@ def minimax(player, maxDepth, currentDepth):
 
 def max_dfs(board, player, maxDepth, currentDepth):
     if (currentDepth >= maxDepth):
-        return 0, None
-    if(game_over(board)!= -1):
+        return score(board), None
+    if(game_over(board)!= None):
         if(game_over(board)=="x"):
             return 1000, None
         if (game_over(board) == "o"):
@@ -95,8 +112,8 @@ def max_dfs(board, player, maxDepth, currentDepth):
 
 def min_dfs(board, player, maxDepth, currentDepth):
     if(currentDepth >= maxDepth):
-        return 0, None
-    if(game_over(board)!= -1):
+        return score(board), None
+    if(game_over(board)!= None):
         if(game_over(board)=="x"):
             return 1000, None
         if (game_over(board) == "o"):
@@ -122,10 +139,12 @@ while game_over(board) is None:
 #while terminal_state(move) is None:
     #print(move)
     player = opponent(player)
-    #move = int(input("move:"))
-    move = minimax(player,3,0)
-    #while make_move(move,player) is False:
-    #    move = int(input("move invalid:"))
+    if player is "x":
+        move = int(input("move:"))
+    else:
+        move = minimax(player,3,0)
+    while make_move(move,player) is False:
+        move = int(input("move invalid:"))
 
     display()
     print('')
